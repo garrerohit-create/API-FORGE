@@ -28,7 +28,7 @@ export const config = {
   env: process.env.NODE_ENV || 'development',
   isDev: (process.env.NODE_ENV || 'development') === 'development',
   isTest: process.env.NODE_ENV === 'test',
-  host: process.env.HOST || '127.0.0.1',
+  host: process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'),
   port: parseNumber(process.env.PORT, 5000),
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   databasePath: process.env.DATABASE_PATH || './data/apiforge.sqlite',
