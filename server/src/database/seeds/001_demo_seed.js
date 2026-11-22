@@ -1,5 +1,6 @@
 import { getDatabase } from '../connection.js';
 import { runMigrations } from '../migrationRunner.js';
+import { config } from '../../config/index.js';
 
 export function seedDemoData(customDb = null) {
   const db = customDb || getDatabase();
@@ -57,8 +58,9 @@ export function seedDemoData(customDb = null) {
       VALUES (?, ?, ?, ?, ?)
     `).run(envId, workspaceId, 'Local Development', now, now);
 
+    const defaultBaseUrl = config.serverUrl || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:5000');
     const envVars = [
-      { key: 'base_url', value: 'http://127.0.0.1:5000', isSecret: 0 },
+      { key: 'base_url', value: defaultBaseUrl, isSecret: 0 },
       { key: 'api_version', value: 'v1', isSecret: 0 },
       { key: 'student_id', value: '1', isSecret: 0 },
       { key: 'demo_token', value: 'forge-dev-token-xyz987', isSecret: 1 }

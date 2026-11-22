@@ -1,0 +1,53 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "api-forge": {
+      "root": ".",
+      "framework": "container",
+      "runtime": "container",
+      "buildCommand": "npm ci && npm run build",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "server",
+          "format": "url",
+          "env": "SERVER_URL"
+        }
+      ]
+    },
+    "client": {
+      "root": "client",
+      "framework": "vite"
+    },
+    "server": {
+      "root": "server",
+      "framework": "express"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/demo/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/mock/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "client"
+      }
+    }
+  ]
+}

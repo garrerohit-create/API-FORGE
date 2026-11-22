@@ -5,7 +5,7 @@ const initialTab = {
   requestId: null,
   name: 'Untitled Request',
   method: 'GET',
-  urlTemplate: 'http://127.0.0.1:5000/demo/v1/students',
+  urlTemplate: typeof window !== 'undefined' && window.location?.origin ? `${window.location.origin}/demo/v1/students` : 'http://127.0.0.1:5000/demo/v1/students',
   headers: [{ key: 'Accept', value: 'application/json', enabled: true }],
   queryParams: [],
   bodyType: 'none',

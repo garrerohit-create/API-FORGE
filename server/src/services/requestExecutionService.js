@@ -66,6 +66,10 @@ export class RequestExecutionService {
     const varMap = environmentId ? getEnvironmentVariablesMap(environmentId, db) : {};
 
     let resolvedUrl = interpolateString(urlTemplate, varMap);
+    const defaultBase = config.serverUrl || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://${config.host}:${config.port}`);
+    if (resolvedUrl.startsWith('/')) {
+      resolvedUrl = new URL(resolvedUrl, defaultBase).toString();
+    }
     
     // Append query params
     if (Array.isArray(queryParams) && queryParams.length > 0) {

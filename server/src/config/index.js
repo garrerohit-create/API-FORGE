@@ -31,7 +31,8 @@ export const config = {
   host: process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'),
   port: parseNumber(process.env.PORT, 5000),
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
-  databasePath: process.env.DATABASE_PATH || './data/apiforge.sqlite',
+  serverUrl: process.env.SERVER_URL || null,
+  databasePath: process.env.DATABASE_PATH || (process.env.VERCEL ? '/tmp/apiforge.sqlite' : './data/apiforge.sqlite'),
   requestTimeoutMs: parseNumber(process.env.REQUEST_TIMEOUT_MS, 15000),
   maxRequestTimeoutMs: parseNumber(process.env.MAX_REQUEST_TIMEOUT_MS, 60000),
   maxRequestBytes: parseNumber(process.env.MAX_REQUEST_BYTES, 1024 * 1024), // 1MB

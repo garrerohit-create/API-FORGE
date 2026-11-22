@@ -52,7 +52,17 @@ export async function validateDestinationUrl(rawUrl, options = {}) {
   const port = parsed.port ? Number(parsed.port) : (parsed.protocol === 'https:' ? 443 : 80);
   const pathname = parsed.pathname;
 
-  // 3. Local Loopback Handling
+  // 3. Local Loopback & Service Binding Handling
+  let isBoundService = false;
+  if (config.serverUrl) {
+    try {
+      const bound = new URL(config.serverUrl);
+      if (bound.hostname.toLowerCase() === hostname) {
+        isBoundService = true;
+      }
+    } catch {}
+  }
+
   const isLoopbackHost =
     hostname === 'localhost' ||
     hostname === '127.0.0.1' ||
@@ -60,9 +70,9 @@ export async function validateDestinationUrl(rawUrl, options = {}) {
     hostname === '0.0.0.0' ||
     hostname.endsWith('.localhost');
 
-  if (isLoopbackHost) {
-    // Only allow calling the server's own port
-    if (port !== serverPort) {
+  if (isLoopbackHost || isBoundService) {
+    // Only enforce port match for loopback if not an injected service binding
+    if (isLoopbackHost && !isBoundService && port !== serverPort) {
       throw new DestinationValidationError(
         `Access to local port ${port} is restricted. Only the API FORGE port (${serverPort}) is allowed for local mock/demo endpoints.`,
         'FORBIDDEN_LOOPBACK_PORT'
